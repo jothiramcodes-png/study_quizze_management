@@ -1,0 +1,18 @@
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT || 5432,
+  user: process.env.DB_USER || 'postgres',
+  password: process.env.DB_PASSWORD || 'postgres',
+  database: process.env.DB_NAME || 'mindtrack_db',
+  max: 10
+});
+
+async function testConnection() {
+  const client = await pool.connect();
+  console.log('✅ PostgreSQL connected');
+  client.release();
+}
+
+module.exports = { pool, testConnection };
