@@ -30,13 +30,76 @@ const getDashboardStats = async (req, res) => {
       where: { teacherId: teacher.id }
     });
 
+    // Fetch all quizzes with their attempts from students in this school
+    const quizzes = await prisma.quiz.findMany({
+      include: {
+        attempts: {
+          where: {
+            status: 'completed',
+            student: { user: { schoolId: user.schoolId } }
+          }
+        },
+        _count: { select: { questions: true } }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    // Fetch recent attempts from students in this school
+    const recentAttempts = await prisma.quizAttempt.findMany({
+      where: {
+        student: { user: { schoolId: user.schoolId } }
+      },
+      include: {
+        student: {
+          include: {
+            user: { select: { firstName: true, lastName: true } }
+          }
+        },
+        quiz: { select: { title: true, topic: true, quizType: true } }
+      },
+      orderBy: { completedAt: 'desc' },
+      take: 50
+    });
+
     res.json({
       success: true,
       data: {
         total_students: studentsCount,
         at_risk_count: atRiskCount,
         avg_score: avgScore,
-        feedback_given: feedbackGiven
+        feedback_given: feedbackGiven,
+        quizzes: quizzes.map(q => {
+          const completedAttempts = q.attempts;
+          const avgPercentage = completedAttempts.length > 0
+            ? (completedAttempts.reduce((sum, a) => sum + a.percentage, 0) / completedAttempts.length).toFixed(1)
+            : 0;
+          return {
+            id: q.id,
+            title: q.title,
+            topic: q.topic,
+            quiz_type: q.quizType,
+            difficulty: q.difficulty,
+            total_marks: q.totalMarks,
+            attempts_count: completedAttempts.length,
+            avg_score: avgPercentage,
+            total_questions: q._count.questions
+          };
+        }),
+        recent_attempts: recentAttempts.map(a => ({
+          id: a.id,
+          student_id: a.studentId,
+          student_name: a.student.user.firstName + ' ' + a.student.user.lastName,
+          roll_number: a.student.rollNumber,
+          quiz_title: a.quiz.title,
+          topic: a.quiz.topic,
+          quiz_type: a.quiz.quizType,
+          score: a.score,
+          total_marks: a.totalMarks,
+          percentage: a.percentage,
+          completed_at: a.completedAt,
+          started_at: a.startedAt,
+          status: a.status
+        }))
       }
     });
   } catch (err) {

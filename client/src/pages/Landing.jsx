@@ -42,55 +42,37 @@ export default function Landing() {
           Monitor mental health, track academic progress, and provide early support through AI-generated assessments.
         </p>
 
-        {/* Portal Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl w-full px-4 mb-20">
-          {/* Student Portal Card */}
-          <Link to="/login?role=student" className="group glass-card rounded-2xl p-8 text-left glass-card-hover relative overflow-hidden flex flex-col h-full">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl -mr-10 -mt-10 transition-all group-hover:bg-cyan-500/20" />
-            <div className="w-14 h-14 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6">
-              <GraduationCap className="w-7 h-7 text-cyan-400" />
+        {/* Unified Portal Card */}
+        <div className="max-w-xl w-full px-4 mb-20 animate-fadeIn">
+          <div className="group glass-card rounded-3xl p-10 text-center glass-card-hover relative overflow-hidden flex flex-col items-center">
+            {/* Background blur blobs */}
+            <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl -mr-10 -mt-10 transition-all group-hover:bg-indigo-500/20" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-violet-500/10 rounded-full blur-3xl -ml-10 -mb-10 transition-all group-hover:bg-violet-500/20" />
+            
+            <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
+              <ShieldCheck className="w-8 h-8 text-indigo-400" />
             </div>
-            <div className="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 mb-4 w-fit">
-              For Learners
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-3">Student Portal</h3>
-            <p className="text-slate-400 mb-8 flex-1">Take AI-generated quizzes, view your well-being scores, and get personalized feedback from teachers.</p>
-            <div className="flex items-center text-cyan-400 font-medium group-hover:translate-x-2 transition-transform">
-              Access Portal <ArrowRight className="w-5 h-5 ml-2" />
-            </div>
-          </Link>
 
-          {/* Teacher Portal Card */}
-          <Link to="/login?role=teacher" className="group glass-card rounded-2xl p-8 text-left glass-card-hover relative overflow-hidden flex flex-col h-full mt-0 md:-mt-8 mb-0 md:mb-8">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/10 rounded-full blur-3xl -mr-10 -mt-10 transition-all group-hover:bg-violet-500/20" />
-            <div className="w-14 h-14 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mb-6">
-              <Users className="w-7 h-7 text-violet-400" />
-            </div>
-            <div className="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 mb-4 w-fit">
-              For Educators
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-3">Teacher Portal</h3>
-            <p className="text-slate-400 mb-8 flex-1">Monitor your students' mental health, review quiz attempts, and identify at-risk students early.</p>
-            <div className="flex items-center text-violet-400 font-medium group-hover:translate-x-2 transition-transform">
-              Access Portal <ArrowRight className="w-5 h-5 ml-2" />
-            </div>
-          </Link>
+            <h3 className="text-3xl font-extrabold text-white mb-3">Unified Portal Access</h3>
+            <p className="text-slate-400 mb-8 max-w-sm">
+              Sign in to access your dashboard. The system will automatically direct you to your personalized workspace (Student, Teacher, or Admin) based on your account.
+            </p>
 
-          {/* Admin Portal Card */}
-          <Link to="/login?role=admin" className="group glass-card rounded-2xl p-8 text-left glass-card-hover relative overflow-hidden flex flex-col h-full">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl -mr-10 -mt-10 transition-all group-hover:bg-indigo-500/20" />
-            <div className="w-14 h-14 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6">
-              <ShieldCheck className="w-7 h-7 text-indigo-400" />
+            <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+              <Link 
+                to="/login" 
+                className="flex-1 px-8 py-3.5 rounded-xl font-semibold text-white bg-gradient-primary shadow-lg shadow-indigo-500/20 text-center flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              >
+                Sign In <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link 
+                to="/register" 
+                className="flex-1 px-8 py-3.5 rounded-xl font-semibold text-slate-300 hover:text-white bg-slate-800/40 border border-slate-700/60 hover:bg-slate-800 text-center flex items-center justify-center transition-all"
+              >
+                Register Here
+              </Link>
             </div>
-            <div className="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 mb-4 w-fit">
-              For Management
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-3">Admin Portal</h3>
-            <p className="text-slate-400 mb-8 flex-1">Generate new quizzes using Gemini AI, manage departments, and view college-wide analytics.</p>
-            <div className="flex items-center text-indigo-400 font-medium group-hover:translate-x-2 transition-transform">
-              Access Portal <ArrowRight className="w-5 h-5 ml-2" />
-            </div>
-          </Link>
+          </div>
         </div>
 
         {/* Stats Row */}

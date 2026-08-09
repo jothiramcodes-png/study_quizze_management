@@ -61,11 +61,14 @@ export default function Layout({ children }) {
     : 'bg-indigo-500/20 border-indigo-500/30 text-indigo-300';
 
   return (
-    <div className="flex h-screen bg-slate-900 overflow-hidden">
-      {/* Background effect */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-64 w-[40%] h-[30%] bg-indigo-600/5 blur-[100px]" />
-        <div className="absolute bottom-0 right-0 w-[30%] h-[40%] bg-violet-600/5 blur-[100px]" />
+    <div className="flex h-screen bg-[#0b0f19] overflow-hidden relative">
+      {/* Background dot grid pattern */}
+      <div className="absolute inset-0 bg-dot-pattern pointer-events-none opacity-60 z-0" />
+
+      {/* Floating blur glow effects */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-0 left-64 w-[40%] h-[35%] bg-indigo-600/10 blur-[130px] rounded-full animate-float-1" />
+        <div className="absolute bottom-0 right-0 w-[35%] h-[45%] bg-pink-500/10 blur-[130px] rounded-full animate-float-2" />
       </div>
 
       {/* Sidebar */}

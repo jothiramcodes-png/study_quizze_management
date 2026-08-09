@@ -19,11 +19,14 @@ export default function TeacherDashboard() {
     total_students: 0,
     at_risk_count: 0,
     avg_score: 0,
-    feedback_given: 0
+    feedback_given: 0,
+    quizzes: [],
+    recent_attempts: []
   });
   const [students, setStudents] = useState([]);
   const [weeklyTrend, setWeeklyTrend] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('quizzes');
   
   // Student detail state
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -427,6 +430,163 @@ export default function TeacherDashboard() {
             )}
           </div>
         </Card>
+      </div>
+
+      {/* Tabs for Quiz & Student Results */}
+      <div className="space-y-4 pt-6 border-t border-slate-800/60">
+        <div className="flex border-b border-slate-800">
+          <button
+            onClick={() => setActiveTab('quizzes')}
+            className={`px-6 py-3 font-semibold text-sm transition-all border-b-2 -mb-[2px] ${
+              activeTab === 'quizzes'
+                ? 'border-indigo-500 text-indigo-400 font-bold'
+                : 'border-transparent text-slate-400 hover:text-white'
+            }`}
+          >
+            Quiz Performance Overview
+          </button>
+          <button
+            onClick={() => setActiveTab('students')}
+            className={`px-6 py-3 font-semibold text-sm transition-all border-b-2 -mb-[2px] ${
+              activeTab === 'students'
+                ? 'border-indigo-500 text-indigo-400 font-bold'
+                : 'border-transparent text-slate-400 hover:text-white'
+            }`}
+          >
+            Student Quiz Results
+          </button>
+        </div>
+
+        {activeTab === 'quizzes' ? (
+          <Card>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-white">Quiz Performance Overview</h3>
+                <p className="text-xs text-slate-500 mt-1">Average scores and completion metrics for all assessments in your school.</p>
+              </div>
+              <span className="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/20">{stats.quizzes?.length || 0} Quizzes</span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm text-slate-300">
+                <thead className="bg-slate-800/50 text-slate-400 uppercase text-xs">
+                  <tr>
+                    <th className="p-4">Quiz Title</th>
+                    <th className="p-4">Topic</th>
+                    <th className="p-4">Type</th>
+                    <th className="p-4">Difficulty</th>
+                    <th className="p-4">Questions</th>
+                    <th className="p-4">Total Marks</th>
+                    <th className="p-4">Attempts</th>
+                    <th className="p-4">Class Avg</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60">
+                  {(stats.quizzes || []).map((q) => (
+                    <tr key={q.id} className="hover:bg-slate-800/30 transition-all">
+                      <td className="p-4 font-semibold text-white">{q.title}</td>
+                      <td className="p-4 text-slate-300">{q.topic}</td>
+                      <td className="p-4 capitalize text-slate-400">{q.quiz_type}</td>
+                      <td className="p-4">
+                        <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${
+                          q.difficulty === 'hard' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                          q.difficulty === 'medium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                          'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                        }`}>
+                          {q.difficulty}
+                        </span>
+                      </td>
+                      <td className="p-4 text-slate-400">{q.total_questions}</td>
+                      <td className="p-4 text-slate-400">{q.total_marks}</td>
+                      <td className="p-4 font-medium text-slate-300">{q.attempts_count}</td>
+                      <td className={`p-4 font-bold ${
+                        parseFloat(q.avg_score) >= 80 ? 'text-emerald-400' :
+                        parseFloat(q.avg_score) >= 50 ? 'text-amber-400' : 
+                        parseFloat(q.avg_score) > 0 ? 'text-red-400' : 'text-slate-500'
+                      }`}>
+                        {q.avg_score > 0 ? `${q.avg_score}%` : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                  {(!stats.quizzes || stats.quizzes.length === 0) && (
+                    <tr>
+                      <td colSpan="8" className="p-8 text-center text-slate-500">No quizzes created yet.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        ) : (
+          <Card>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-white">Student Quiz Results</h3>
+                <p className="text-xs text-slate-500 mt-1">Detailed scores and completion details for recent student quiz attempts.</p>
+              </div>
+              <span className="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/20">{stats.recent_attempts?.length || 0} Attempts</span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm text-slate-300">
+                <thead className="bg-slate-800/50 text-slate-400 uppercase text-xs">
+                  <tr>
+                    <th className="p-4">Student</th>
+                    <th className="p-4">Roll Number</th>
+                    <th className="p-4">Quiz Title</th>
+                    <th className="p-4">Topic</th>
+                    <th className="p-4">Score</th>
+                    <th className="p-4">Percentage</th>
+                    <th className="p-4">Completed Date</th>
+                    <th className="p-4">Status</th>
+                    <th className="p-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60">
+                  {(stats.recent_attempts || []).map((att) => (
+                    <tr key={att.id} className="hover:bg-slate-800/30 transition-all">
+                      <td className="p-4 font-semibold text-white">{att.student_name}</td>
+                      <td className="p-4 text-slate-400 font-medium">{att.roll_number}</td>
+                      <td className="p-4 text-white font-medium">{att.quiz_title}</td>
+                      <td className="p-4 text-slate-300">{att.topic}</td>
+                      <td className="p-4 text-slate-300">{att.score} / {att.total_marks}</td>
+                      <td className={`p-4 font-bold ${
+                        att.percentage >= 80 ? 'text-emerald-400' :
+                        att.percentage >= 50 ? 'text-amber-400' : 'text-red-400'
+                      }`}>
+                        {att.percentage.toFixed(1)}%
+                      </td>
+                      <td className="p-4 text-slate-400">
+                        {att.completed_at ? new Date(att.completed_at).toLocaleDateString() : '—'}
+                      </td>
+                      <td className="p-4">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold border uppercase ${
+                          att.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                          'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                        }`}>
+                          {att.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                        {att.status === 'completed' && (
+                          <button
+                            onClick={() => navigate(`/quiz/attempt/${att.id}`)}
+                            className="px-3 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 text-indigo-300 rounded-xl text-xs font-semibold transition-all"
+                          >
+                            Review
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                  {(!stats.recent_attempts || stats.recent_attempts.length === 0) && (
+                    <tr>
+                      <td colSpan="9" className="p-8 text-center text-slate-500">No attempts logged yet.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        )}
       </div>
     </div>
   );
